@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 // Phase 1: 타입 임포트 테스트
 import { FastingSession, MessageBank } from './src/types';
 // Phase 2: 상수 임포트 테스트
@@ -10,8 +10,16 @@ import { MESSAGE_BANK } from './src/constants/messageBank';
 import { formatDuration, formatTime, now } from './src/utils/time';
 // Phase 5: 메시지 선택 유틸리티 임포트 테스트
 import { getMessageCategory, selectMessage } from './src/utils/messages';
+// Phase 6: Zustand Store 임포트 테스트
+import { useFastingStore } from './src/store/fastingStore';
 
 export default function App() {
+  // Phase 6: Store 테스트
+  const startFasting = useFastingStore((state) => state.startFasting);
+  const currentSession = useFastingStore((state) => state.currentSession);
+  const stopFasting = useFastingStore((state) => state.stopFasting);
+  const history = useFastingStore((state) => state.history);
+
   // Phase 2: 테스트 코드
   console.log('총 플랜 개수:', FASTING_PLANS.length); // 9
   console.log('16:8 플랜:', getPlanByType('16:8')?.label); // "16:8 플랜"
@@ -33,9 +41,36 @@ export default function App() {
   const message = selectMessage('in_progress_early', { duration: '3시간' });
   console.log('변수 치환 테스트:', message); // "지금 3시간, 몸이 적응하는 중이에요" (예시)
 
+  // Phase 6: Store 상태 로그
+  console.log('현재 세션:', currentSession);
+  console.log('히스토리:', history.stats)
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
+      <Text>DailyFast - Phase 6 Store Test</Text>
+      <Text style={{ marginTop: 20 }}>
+        Current Session: {currentSession ? 'Active' : 'None'}
+      </Text>
+      <Text>Total Sessions: {history.stats.totalSessions}</Text>
+      <Text>Success Count: {history.stats.successCount}</Text>
+
+      <View style={{ marginTop: 20 }}>
+        <Button
+          title="Start 16:8 Fasting"
+          onPress={() => startFasting('16:8')}
+          disabled={currentSession !== null}
+        />
+      </View>
+
+      {currentSession && (
+        <View style={{ marginTop: 10 }}>
+          <Button
+            title="Stop Fasting"
+            onPress={() => stopFasting('completed')}
+          />
+        </View>
+      )}
+
       <StatusBar style="auto" />
     </View>
   );
