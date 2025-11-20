@@ -6,6 +6,8 @@ import { FastingSession, MessageBank } from './src/types';
 import { FASTING_PLANS, getPlanByType } from './src/constants/fastingPlans';
 // Phase 3: 메시지 뱅크 임포트 테스트
 import { MESSAGE_BANK } from './src/constants/messageBank';
+// Phase 4: 시간 유틸리티 임포트 테스트
+import { formatDuration, formatTime, now } from './src/utils/time';
 
 export default function App() {
   // Phase 2: 테스트 코드
@@ -16,6 +18,11 @@ export default function App() {
   // Phase 3: 테스트 코드
   console.log('in_progress_early 메시지 개수:', MESSAGE_BANK.in_progress_early.length); // 3 이상
   console.log('success 메시지:', MESSAGE_BANK.success[0]); // "오늘도 해냈네요! 👏"
+
+  // Phase 4: 테스트 코드
+  console.log('formatDuration 테스트:', formatDuration(45000000)); // "12시간 30분 0초"
+  console.log('formatTime 테스트:', formatTime(now())); // "오후 3:45" (현재 시각)
+  console.log('현재 시간:', now());
 
   return (
     <View style={styles.container}>
